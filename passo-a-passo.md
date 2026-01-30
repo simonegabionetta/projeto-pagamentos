@@ -1,3 +1,6 @@
+FRONT
+
+
 1. Criar pasta: mkdir projeto-pagamentos
 2. Criar pasta: mkdir backend
 3. Criar pasta + projeto com vite: npm create vite@latest frontend
@@ -59,3 +62,19 @@ Valor: Aplica máscara -> Limpa símbolos -> Converte para número -> Checa se �
 Botão: Só libera se os dois vereditos forem positivos.
 
 --------------------------------------------------------------------
+BACKEND
+
+1. Inicializar o projeto Node.js: npm init -y
+2. Instalar as dependências: npm install express cors
+express: É um framework para Node.js que gerencia rotas HTTP.
+cors (Cross-Origin Resource Sharing): É um middleware necessário porque o seu Frontend (Vite) roda em uma porta (5173) e o Backend rodará em outra (3000). Sem o CORS, o navegador bloqueia a comunicação entre eles por segurança.
+3. Criar arquivo index.js
+
+1.  importar bibliotecas  express e cors
+2.  inicializar o servidor
+3.  ativar o cors e o express json
+4.  cria rota get de teste
+5.  define a porta que o servidor ira rodar
+6.  rodar o servidor:  node index.js
+
+-----------------------------------------------------------------------------
