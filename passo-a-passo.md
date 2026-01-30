@@ -7,14 +7,55 @@ obs. se instalaçao nao der certo parar e limpar cache:rm -rf node_modules packa
 5. Exportar o botao e criar o componente para testar se deu certo a instalaçao no app.tsx
 6. Limpeza: Apagar arquivos App.css e Index.css, pasta assets
 7. Criar formulario
+TELA DO CELULAR / COMPUTADOR
+┌─────────────────────────────────────┐
+│                                     │
+│            Container                │   ← Centraliza tudo
+│     ┌─────────────────────────┐     │
+│     │         Card            │     │   ← Cartão branco com sombra
+│     │   ┌─────────────────┐   │     │
+│     │   │  CardContent    │   │     │   ← Organização interna
+│     │   │                 │   │     │
+│     │   │  Área de        │   │     │   ← Typography (título)
+│     │   │  Pagamentos     │   │     │
+│     │   │                 │   │     │
+│     │   │  [ Nome ]       │   │     │   ← TextField
+│     │   │                 │   │     │
+│     │   │  [ Valor ]      │   │     │   ← TextField
+│     │   │                 │   │     │
+│     │   │ [ Confirmar ]   │   │     │   ← Button
+│     │   │                 │   │     │
+│     │   └─────────────────┘   │     │
+│     └─────────────────────────┘     │
+│                                     │
+└─────────────────────────────────────┘
+--------------------------------------------------------------
 8. Validaçao e feedback
-O Fluxo Ideal de Produção (A Ordem Certa)
-Desenho (A Tela): Você cria o TextField e o Button apenas visualmente (sem lógica).
 
-Estado (useState): Você faz o campo "escrever" (conecta o value e o onChange).
+CAMPO NOME
+1. Limpeza.trim(): remove espaços em branco inicio e fim
+2. Checa tamanho(.length): conta as letras que sobraram após a limpeza
+3. Veredito (nomeEhValido): Verifica se o resultado está entre 3 e 40 caracteres. Se for falso, o TextField ativa o error (borda vermelha) e mostra o helperText.
 
-Validação de Campo (Feedback): Você adiciona o error e o helperText para aquele campo específico.
+CAMPO VALOR
+1. Entrada e Máscara: O usuário digita 1050. O onChange chama a função e transforma em "R$ 10,50".
+2. Limpeza para o Computador (replace): Para validar, o código "suja as mãos" e retira tudo o que a máscara colocou, deixando apenas "1050".
+3. Conversão (Number()): Transforma o texto "1050" no número decimal 10.50.
+4. Checagem de Valor (> 0): O código pergunta: "Este número é maior que zero e menor que 1 milhão?".
+5. Veredito (valorEhValido): Se as respostas forem sim, o campo está aprovado.
 
-Validação de Grupo (O Botão): Você cria a variável formularioValido que une todos os campos.
+FOMULARIO(A União)
+Depois que os dois campos passaram pelos seus testes individuais, eles chegam ao "porteiro" final.
+A Operação && (E): O código executa: nomeEhValido && valorEhValido.
+
+Ação: Se ambos forem verdadeiros, a variável formularioValido vira true.
+Resultado no Botão: O atributo disabled={!formularioValido} é atualizado. O botão deixa de ser cinza e fica azul (clicável).
+
+Revisão rápida:
+Nome: Limpa espaços -> Mede tamanho -> Dá o veredito.
+
+Valor: Aplica máscara -> Limpa símbolos -> Converte para número -> Checa se é positivo -> Dá o veredito.
+
+Botão: Só libera se os dois vereditos forem positivos.
+
 --------------------------------------------------------------------
-9.  Mascara da Moeda

@@ -1,7 +1,7 @@
 //imports
 
 import { useState } from 'react';
-import {Button, TextField, Typography, Card, CardContent, Container} from '@mui/material';
+import {Button, TextField, Typography, Card, CardContent, Container, Alert} from '@mui/material';
 import PaymentsIcon from '@mui/icons-material/Payments';
 
 
@@ -24,6 +24,8 @@ function App(){
 
   const [nome, setNome] = useState('');
   const [valor, setValor] = useState(''); 
+  const [carregando, setCarregando] = useState(false);
+  const [sucesso, setSucesso] = useState(false);
 
   //2. validação
 
@@ -41,12 +43,21 @@ function App(){
   //3.ação
 
   const confirmarPagamento = () => {
-    
-    if (formularioValido) {
-      alert(`Enviando R$ ${valor} para ${nome}`);
-    }
-  };
-  
+  if (formularioValido) {
+    setCarregando(true); // Ativa o círculo de carregando no botão
+
+    // Simula uma espera de 2 segundos (como se fosse o banco respondendo)
+    setTimeout(() => {
+      setCarregando(false);
+      setSucesso(true);
+      
+      setNome('');  // Volta o estado do nome para vazio
+      setValor(''); // Volta o estado do valor para vazio
+      
+      
+    }, 2000);
+  }
+};
   //interface
 
   return (
@@ -57,6 +68,12 @@ function App(){
           <Typography variant="h5" textAlign="center" fontWeight="bold">
             Área de Pagamentos
           </Typography>
+          {/* Coloque isso logo abaixo do Typography do título */}
+          {sucesso && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              Pagamento realizado com sucesso!
+            </Alert>
+          )}
 
           {/* Campo do Nome */}          
           <TextField 
@@ -100,9 +117,9 @@ function App(){
             startIcon={<PaymentsIcon />}
             fullWidth
             onClick={confirmarPagamento}
-            disabled={!formularioValido}
-          >
-            Confirmar Pagamento
+            disabled={!formularioValido || carregando} // Desativa também se estiver carregando
+            >
+            {carregando ? "Processando..." : "Confirmar Pagamento"}         
           </Button>
 
         </CardContent>
