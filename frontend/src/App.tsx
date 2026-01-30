@@ -1,22 +1,45 @@
+//imports
+
 import { useState } from 'react';
 import {Button, TextField, Typography, Card, CardContent, Container} from '@mui/material';
 import PaymentsIcon from '@mui/icons-material/Payments';
 
+
+//funçao mascara do valor
+
+const formatarMoeda = (valor: string) => {
+  const apenasNumeros = valor.replace(/\D/g, ""); // Remove tudo que não é número
+  const valorDecimal = Number(apenasNumeros) / 100; // Transforma em decimal (ex: 100 vira 1.00)
+
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valorDecimal);
+};
+
+
 function App(){
+
   //1. estados
+
   const [nome, setNome] = useState('');
   const [valor, setValor] = useState(''); 
 
-  //2. validação 
+  //2. validação
+
   const nomeSemEspacos = nome.trim(); // o trim remove e sobra "", que tem tamanho 0.
   const nomeEhValido = nomeSemEspacos.length >= 3 && nomeSemEspacos.length <= 40; //entre 3 e 40 letras
 
-  const valorNumerico = Number(valor);//Number() converte para número
-  const valorEhValido = valor !== '' && valorNumerico > 0 && valorNumerico < 1000000; // Limite de 1 milhão por segurança
+  const valorLimpo = valor.replace(/\D/g, ""); 
+  const valorNumerico = Number(valorLimpo) / 100;  
+  const valorEhValido = valor !== '' && valorNumerico > 0 && valorNumerico < 1000000;
 
   const formularioValido = nomeEhValido && valorEhValido;
 
+  
+
   //3.ação
+
   const confirmarPagamento = () => {
     
     if (formularioValido) {
@@ -25,6 +48,7 @@ function App(){
   };
   
   //interface
+
   return (
     <Container maxWidth="sm" sx={{ marginTop: 8 }}>
       <Card elevation={3}>
@@ -34,38 +58,37 @@ function App(){
             Área de Pagamentos
           </Typography>
 
-          {/* Campo do Nome */}
+          {/* Campo do Nome */}          
           <TextField 
-            label="Nome do Recebedor" 
+            label="Nome do Recebedor"             
             variant="outlined" 
             fullWidth 
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            // O Porquê: 'error' fica vermelho se o usuário já começou a digitar algo inválido.
+            // 'error' vermelho se o usuário já começou a digitar algo inválido.
             error={nome.length > 0 && !nomeEhValido}
-            // O Porquê: O helperText explica para o usuário O QUE ele errou.
+            //  feedback para usuario do erro
             helperText={
               nome.length > 0 && nome.length < 3 
                 ? "O nome deve ter no mínimo 3 caracteres"
                 : nome.length > 40 ? "Máximo de 40 caracteres atingido" : ""
             }
-            inputProps={{ maxLength: 40 }} 
+  
           />
 
           {/* Campo do Valor */}
           <TextField 
-            label="Valor (R$)" 
+            label="Valor do Pagamento" 
             variant="outlined" 
-            type="number"
+            type="text"
             fullWidth 
             value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            // O Porquê: Se o campo não está vazio mas o valor é inválido, acende o erro.
+            onChange={(e) => setValor(formatarMoeda(e.target.value))}
             error={valor !== '' && !valorEhValido}
             helperText={
               valor !== '' && valorNumerico <= 0
                 ? "O valor deve ser maior que zero"
-                : valorNumerico >= 1000000 ? "Valor muito alto para esta operação" : ""
+                : valorNumerico >= 1000000 ? "Valor muito alto" : ""
             }
           />
 
@@ -77,8 +100,6 @@ function App(){
             startIcon={<PaymentsIcon />}
             fullWidth
             onClick={confirmarPagamento}
-            // O Porquê: 'disabled' espera um "sim ou não" para travar o botão.
-            // Usamos '!' (não) porque queremos desativar se o formulário NÃO for válido.
             disabled={!formularioValido}
           >
             Confirmar Pagamento
